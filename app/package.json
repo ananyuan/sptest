@@ -1,0 +1,18 @@
+{
+  "name": "dream",
+  "main": "main.html",
+  "version": "0.1.0",
+  "description": "serialPort with Node-Webkit",
+  "keywords": "node-webkit serialPort",
+  "window": {
+    "title": "dream",
+    "icon": "favicon.ico",
+    "width": 800,
+    "height": 500,
+    "position": "center",
+    "resizable": true,
+    "toolbar": false,
+    "frame": false,
+    "fullscreen": false
+  }
+}
