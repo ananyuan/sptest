@@ -1,20 +1,9 @@
 GLOBAL.namespace("dr.an");
 
 dr.an.serial = function(options) {
-    var defaults = {
-        "id": "-serial",
-        "baudrate": 57600,
-        "databits": 8,
-        "stopbits": 1,
-        "parity": "none",
-        "buffersize": 255
-    };
-
     var _self = this;
 
     this.serials = {};
-
-    this.opts = jQuery.extend(defaults, options);
 
     this.serialPort = require('serialport');
 
@@ -30,23 +19,47 @@ dr.an.serial.prototype.listPort = function() {
         ports.forEach(function(p) {
             var portName = p.comName.toString();
 
-            _self.serials[portName] = undefined;
+            if (!_self.serials[portName]) {
+            	_self.serials[portName] = undefined;
+            }
         });
     });
 }
 
+/**
+ * 获取所有COMM口
+ */
+dr.an.serial.prototype.getPorts = function() {
+    var _self = this;
+    
+    return _self.serials;
+}
 
 
 /**
  * 打开串口
  */
-dr.an.serial.prototype.open = function(port) {
+dr.an.serial.prototype.open = function(port, options) {
     var _self = this;
+
+    var defaults = {
+        "id": "-serial",
+        "baudrate": 57600,
+        "databits": 8,
+        "stopbits": 1,
+        "parity": "none",
+        "buffersize": 255
+    };
+
+    var opts = jQuery.extend(defaults, options);
+
     if (!_self.serials[port]) {
-        _self.serials[port] = new _self.serialPort.SerialPort(port, _self.opts);
+        _self.serials[port] = new _self.serialPort.SerialPort(port, opts);
 
         _self.serials[port].on('data', function(data) {
             console.log('data received----------------------------: ' + data);
+
+            $(document).trigger('myCustomEvent', {"data": data});
         });
     }
 }
